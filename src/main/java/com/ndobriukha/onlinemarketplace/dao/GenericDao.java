@@ -1,18 +1,21 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface GenericDao<T> {
-	/** Create or update dao-object*/
-    public void save(T object);
+public interface GenericDao<T, PK extends Serializable> {
+	/** Create object */
+    PK create(T object);
 
     /** Returns object by id */
-    public T get(Long id);
+    T get(PK id);
 
     /** Returns all objects */
-    public List<T> getAll();
+    List<T> get();
+    
+    /** Update object */
+    void update(T object);
     
     /** Delete object */
-    public void delete(T object);
-    
+    void delete(T object);    
 }
