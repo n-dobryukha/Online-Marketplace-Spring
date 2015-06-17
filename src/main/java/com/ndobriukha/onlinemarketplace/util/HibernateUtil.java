@@ -18,7 +18,6 @@ public class HibernateUtil {
 			ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("appContext.xml");
 			return (SessionFactory) ctx.getBean("sessionFactory");
 		} catch (Throwable ex) {
-			System.out.println("Initial SessionFactory creation failed." + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}

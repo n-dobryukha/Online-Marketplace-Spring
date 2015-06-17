@@ -7,14 +7,18 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.ndobriukha.onlinemarketplace.util.HibernateUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public abstract class GenericDaoHibernateImpl<T, PK extends Serializable> implements GenericDao<T, PK> {
 
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	private Class<T> clazz;
 
 	@SuppressWarnings("unchecked")
@@ -27,33 +31,49 @@ public abstract class GenericDaoHibernateImpl<T, PK extends Serializable> implem
 		}
 	}
 	
+	public GenericDaoHibernateImpl(SessionFactory sessionFactory) {
+		this();
+		this.sessionFactory = sessionFactory;
+	}
+	
 	private Session getSession() {
-        return HibernateUtil.getSession();
+        return sessionFactory.getCurrentSession();
     }
 	
+	/** Create object */
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public PK create(T object) throws ConstraintViolationException, HibernateException {
 		return (PK) getSession().save(object);		
 	}
 	
+	/** Returns object by id */
+	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public T get(PK id) throws HibernateException {
 		return (T) getSession().get(clazz, id);		
 	}
 
+	/** Return all objects */
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public List<T> get() throws HibernateException {
 		return getSession().createCriteria(clazz).list();
 	}
 	
+	/** Update object */
 	@Override
+	@Transactional
 	public void update(T object) throws HibernateException {
 		getSession().update(object);
 	};
 
+	/** Delete object */
 	@Override
+	@Transactional
 	public void delete(T object) throws HibernateException {
 		getSession().delete(object);
 	}

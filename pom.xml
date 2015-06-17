@@ -2,48 +2,52 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ndobriukha</groupId>
-	<artifactId>webapp</artifactId>
+	<artifactId>onlinemarketplace</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>webapp Maven Webapp</name>
+	<name>Online Marketplace Spring</name>
 
 	<properties>
 		<java-version>1.8</java-version>
 		<org.springframework-version>4.1.6.RELEASE</org.springframework-version>
-		<org.hibernate-version>5.0.0.CR1</org.hibernate-version>
+		<org.hibernate-version>4.3.10.Final</org.hibernate-version>
 	</properties>
 
 	<dependencies>
+		<!-- FOR TESTS -->
+		<!-- Junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Apache Common DbUtils -->
 		<dependency>
 			<groupId>commons-dbutils</groupId>
 			<artifactId>commons-dbutils</artifactId>
 			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- SPRING FRAMEWORK -->
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
-			<version>2.1</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework-version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>commons-dbcp</groupId> <artifactId>commons-dbcp</artifactId> 
-			<version>1.4</version> </dependency> -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${org.springframework-version}</version>
 		</dependency>
-		<!-- Hibernate dependencies -->
 		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>${org.hibernate-version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${org.springframework-version}</version>
 		</dependency>
+
+		<!-- HIBERNATE -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
@@ -52,47 +56,62 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>${org.hibernate-version}</version>
+			<version>5.1.3.Final</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-search</artifactId> 
-			<version>${org.hibernate-version}</version> </dependency> -->
+		<!-- Servlet -->
 		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.19.0-GA</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>2.3.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- Apache Database Connection Pool -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1</version>
+		</dependency>
+
+		<!-- Oracle JDBC Driver -->
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0.4.0</version>
 		</dependency>
-		<!-- Spring dependecies -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${org.springframework-version}</version>
-		</dependency>
-		<!-- <dependency> <groupId>org.jboss.resteasy</groupId> <artifactId>resteasy-jaxrs</artifactId> 
-			<version>3.0.11.Final</version> <scope>provided</scope> </dependency> -->
-		<!-- <dependency> <groupId>org.jboss.resteasy</groupId> <artifactId>resteasy-jackson-provider</artifactId> 
-			<version>3.0.11.Final</version> <scope>provided</scope> </dependency> -->
+
 	</dependencies>
 
 
 	<build>
-		<finalName>webapp</finalName>
+		<finalName>Online-Marketplace-Spring</finalName>
 		<plugins>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<additionalProjectnatures>
+						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+					</additionalProjectnatures>
+					<additionalBuildcommands>
+						<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+					</additionalBuildcommands>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -104,73 +123,13 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/scripts</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources/scripts</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-							<filters>
-								<filter>${basedir}/src/main/resources/configuration.properties</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.wildfly.plugins</groupId>
-				<artifactId>wildfly-maven-plugin</artifactId>
-				<version>1.0.2.Final</version>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
 				<configuration>
-					<name>com.ndobriukha.webapp</name>
-					<executeCommands>
-						<batch>false</batch>
-						<scripts>
-							<!--suppress MavenModelInspection -->
-							<script>target/scripts/${cli.file}</script>
-						</scripts>
-					</executeCommands>
-					<serverArgs>
-						<serverArg>-b</serverArg>
-						<serverArg>0.0.0.0</serverArg>
-					</serverArgs>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>com.oracle</groupId>
-						<artifactId>ojdbc6</artifactId>
-						<version>11.2.0.4.0</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
+			</plugin>			
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>install-driver</id>
-			<properties>
-				<cli.file>install-oracle-driver.cli</cli.file>
-			</properties>
-		</profile>
-		<profile>
-			<id>create-datasource</id>
-			<properties>
-				<cli.file>create-datasource.cli</cli.file>
-			</properties>
-		</profile>
-	</profiles>
 </project>

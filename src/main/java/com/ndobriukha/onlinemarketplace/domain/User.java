@@ -34,7 +34,8 @@ public class User {
 	private String billingAddress;
 	
 	@Column(name="LOGIN")
-	@Size(min=6)
+	@NotNull
+	@Size(min=6,max=30)
 	private String login;
 	
 	@Size(min=6)
@@ -46,6 +47,16 @@ public class User {
 	private String email;
 	
 	public User() {		
+	}
+
+	public User(String fullName, String billingAddress, String login,
+			String password, String email) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		super();
+		this.fullName = fullName;
+		this.billingAddress = billingAddress;
+		this.login = login;
+		this.password = PasswordHash.createHash(password);
+		this.email = email;
 	}
 
 	public Long getId() {
