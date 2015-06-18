@@ -21,7 +21,7 @@ response.setCharacterEncoding("UTF-8");%>
 			<div class="form-group">
 				<label for="login" class="col-sm-4 control-label">Login</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="login" name="login"
+					<input type="text" class="form-control" id="username" name="username"
 						placeholder="Login" autofocus="autofocus" required="required">					
 				</div>
 			</div>
@@ -32,7 +32,7 @@ response.setCharacterEncoding("UTF-8");%>
 						placeholder="Password" required="required">
 				</div>
 			</div>
-
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<div class="form-group">
 				<div class="col-sm-offset-4 col-sm-8">
 					<button type="submit" class="btn btn-primary btn-sm">Sign in</button>

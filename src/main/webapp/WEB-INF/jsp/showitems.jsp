@@ -12,7 +12,7 @@ response.setCharacterEncoding("UTF-8");%>
 <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
 </head>
 <body>
-	<%@include file="/WEB-INF/jspf/header.jspf" %>
+	<%-- <%@include file="/WEB-INF/jspf/header.jspf" %> --%>
 	<input type='hidden' id='type' value='${ model }'/>
 	<div class="container-fluid">
 		<fieldset>

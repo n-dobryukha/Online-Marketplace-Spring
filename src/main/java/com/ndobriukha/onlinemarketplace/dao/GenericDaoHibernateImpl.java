@@ -36,7 +36,7 @@ public abstract class GenericDaoHibernateImpl<T, PK extends Serializable> implem
 		this.sessionFactory = sessionFactory;
 	}
 	
-	private Session getSession() {
+	protected Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 	

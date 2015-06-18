@@ -1,15 +1,9 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
-import org.hibernate.SessionFactory;
+import java.io.Serializable;
 
 import com.ndobriukha.onlinemarketplace.domain.User;
 
-public class UserDao extends GenericDaoHibernateImpl<User, Long> {
-	
-	public UserDao() {
-	}
-	
-	public UserDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
-	}
+public interface UserDao<T, PK extends Serializable> extends GenericDao<T, PK> {
+	public User getUserByLogin(String login);
 }

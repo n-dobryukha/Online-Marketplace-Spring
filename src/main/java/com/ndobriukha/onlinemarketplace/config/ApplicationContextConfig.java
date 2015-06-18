@@ -13,24 +13,43 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.ndobriukha.onlinemarketplace.dao.BidDao;
 import com.ndobriukha.onlinemarketplace.dao.GenericDao;
 import com.ndobriukha.onlinemarketplace.dao.ItemDao;
+import com.ndobriukha.onlinemarketplace.dao.ItemDaoImpl;
 import com.ndobriukha.onlinemarketplace.dao.UserDao;
+import com.ndobriukha.onlinemarketplace.dao.UserDaoImpl;
 import com.ndobriukha.onlinemarketplace.domain.Bid;
 import com.ndobriukha.onlinemarketplace.domain.Item;
 import com.ndobriukha.onlinemarketplace.domain.User;
 
 @Configuration
+@EnableWebMvc
 @ComponentScan("com.ndobriukha.onlinemarketplace")
 @EnableTransactionManagement
-public class ApplicationContextConfig {
-    @Bean(name = "viewResolver")
+public class ApplicationContextConfig extends WebMvcConfigurerAdapter {
+    
+	@Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+    }
+ 
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+	
+	@Bean(name = "viewResolver")
     public InternalResourceViewResolver getViewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/views/");
+        viewResolver.setPrefix("/WEB-INF/jsp/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }
@@ -60,6 +79,8 @@ public class ApplicationContextConfig {
     	LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
     	sessionBuilder.addProperties(getHibernateProperties());
     	sessionBuilder.addAnnotatedClasses(User.class);
+    	sessionBuilder.addAnnotatedClasses(Item.class);
+    	sessionBuilder.addAnnotatedClasses(Bid.class);
     	return sessionBuilder.buildSessionFactory();
     }
     
@@ -74,14 +95,14 @@ public class ApplicationContextConfig {
     
     @Autowired
     @Bean(name = "userDao")
-    public GenericDao<User, Long> getUserDao(SessionFactory sessionFactory) {
-    	return new UserDao(sessionFactory);
+    public UserDao<User, Long> getUserDao(SessionFactory sessionFactory) {
+    	return new UserDaoImpl(sessionFactory);
     }
     
     @Autowired
     @Bean(name = "itemDao")
-    public GenericDao<Item, Long> getItemDao(SessionFactory sessionFactory) {
-    	return new ItemDao(sessionFactory);
+    public ItemDao<Item, Long> getItemDao(SessionFactory sessionFactory) {
+    	return new ItemDaoImpl(sessionFactory);
     }
     
     @Autowired

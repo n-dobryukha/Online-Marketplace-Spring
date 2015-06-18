@@ -1,15 +1,7 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
-import org.hibernate.SessionFactory;
+import java.io.Serializable;
 
-import com.ndobriukha.onlinemarketplace.domain.Item;
+public interface ItemDao<T, PK extends Serializable> extends GenericDao<T, PK> {
 
-public class ItemDao extends GenericDaoHibernateImpl<Item, Long> {
-	
-	public ItemDao() {
-	}
-	
-	public ItemDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
-	}
 }

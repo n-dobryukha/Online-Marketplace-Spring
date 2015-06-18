@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ndobriukha.onlinemarketplace.dao.GenericDao;
+import com.ndobriukha.onlinemarketplace.dao.UserDao;
 import com.ndobriukha.onlinemarketplace.domain.User;
 
 /**
@@ -21,7 +21,7 @@ import com.ndobriukha.onlinemarketplace.domain.User;
 public class HomeController {
 	
 	@Autowired
-	private GenericDao<User, Long> userDao;
+	private UserDao<User, Long> userDao;
 
 	@RequestMapping("/")
 	public ModelAndView handleRequest() throws Exception {

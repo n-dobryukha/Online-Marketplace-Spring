@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ndobriukha.onlinemarketplace.util.PasswordHash;
 
 @Entity
@@ -75,6 +76,7 @@ public class User {
 		this.fullName = fullName;
 	}
 
+	@JsonIgnore
 	public String getBillingAddress() {
 		return billingAddress;
 	}
@@ -83,6 +85,7 @@ public class User {
 		this.billingAddress = billingAddress;
 	}
 
+	@JsonIgnore
 	public String getLogin() {
 		return login;
 	}
@@ -91,6 +94,7 @@ public class User {
 		this.login = login;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -111,8 +115,4 @@ public class User {
 		this.password = PasswordHash.createHash(password);
 	}
 	
-	public String[] getFieldsValues() {
-		return new String[] { getFullName(), getBillingAddress(), getLogin(),
-				getPassword(), getEmail() };
-	}
 }

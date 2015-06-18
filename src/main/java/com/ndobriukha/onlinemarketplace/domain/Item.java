@@ -12,10 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="ITEMS")
@@ -43,7 +43,6 @@ public class Item {
 	private int timeLeft;
 	
 	@Column(name="START_BIDDING")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Timestamp startBidding;
 	
 	@Column(name="BUY_IT_NOW")
@@ -108,6 +107,7 @@ public class Item {
 		this.timeLeft = timeLeft;
 	}
 
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getStartBidding() {
 		return startBidding;
 	}
@@ -116,11 +116,11 @@ public class Item {
 		this.startBidding = startBidding;
 	}
 
-	public Boolean isBuyItNow() {
+	public boolean isBuyItNow() {
 		return buyItNow;
 	}
 
-	public void setBuyItNow(Boolean buyItNow) {
+	public void setBuyItNow(boolean buyItNow) {
 		this.buyItNow = buyItNow;
 	}
 
@@ -132,11 +132,11 @@ public class Item {
 		this.bidIncrement = bidIncrement;
 	}
 
-	public Boolean isSold() {
+	public boolean isSold() {
 		return sold;
 	}
 
-	public void setSold(Boolean sold) {
+	public void setSold(boolean sold) {
 		this.sold = sold;
 	}
 

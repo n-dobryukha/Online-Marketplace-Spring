@@ -1,6 +1,6 @@
 package com.ndobriukha.onlinemarketplace.domain;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,8 +37,8 @@ public class Bid {
 	private double amount;
 	
 	@Column(name="TS")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Timestamp timestamp;
+	@Temporal(TemporalType.DATE)
+	private Date timestamp;
 	
 	public Bid() {
 	}
@@ -75,11 +75,11 @@ public class Bid {
 		this.amount = amount;
 	}
 
-	public Timestamp getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 	
