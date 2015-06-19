@@ -11,7 +11,7 @@ response.setCharacterEncoding("UTF-8");%>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrapValidator.min.css">
 </head>
 <body>
-	<%@include file="/WEB-INF/jspf/header.jspf" %>
+	<%-- <%@include file="/WEB-INF/jspf/header.jspf" %> --%>
 	<fieldset class="container">
 		<legend>Edit Item</legend>
 		<form id="formEditItem" class="form-horizontal" action="<%=request.getContextPath()%>/items/save"

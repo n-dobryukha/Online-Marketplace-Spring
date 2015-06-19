@@ -13,7 +13,7 @@ response.setCharacterEncoding("UTF-8");%>
 <body>
 	<fieldset class="container-main">
 		<legend>Login</legend>
-		<form id="formLogin" class="form-horizontal" method="post" action="./auth/login"
+		<form id="formLogin" class="form-horizontal" method="POST" action="./login"
 			data-bv-message="This value is not valid"
 			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
 			data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -21,7 +21,7 @@ response.setCharacterEncoding("UTF-8");%>
 			<div class="form-group">
 				<label for="login" class="col-sm-4 control-label">Login</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="username" name="username"
+					<input type="text" class="form-control" id="login" name="login"
 						placeholder="Login" autofocus="autofocus" required="required">					
 				</div>
 			</div>

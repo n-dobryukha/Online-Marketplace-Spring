@@ -1,4 +1,5 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <% request.setCharacterEncoding("UTF-8");
@@ -15,16 +16,17 @@ response.setCharacterEncoding("UTF-8");%>
 	<%-- <%@include file="/WEB-INF/jspf/header.jspf" %> --%>
 	<input type='hidden' id='type' value='${ model }'/>
 	<div class="container-fluid">
+		<a href="<c:url value="/logout" />">Logout</a>
 		<fieldset>
 			<legend class="h4">${ model } Items</legend>
 
-			<c:if test='${ sessionScope.Role == "USER" }'>
+			<sec:authorize access="isAuthenticated()">
 				<p class="btn-group-xs">
 					<a href="<%=request.getContextPath()%>/items/show/all" type="button" class="btn btn-primary" role="button">Show All Items</a>
 					<a href="<%=request.getContextPath()%>/items/show/my" type="button" class="btn btn-primary" role="button">Show My Items</a>
 					<a href="<%=request.getContextPath()%>/items/new" type="button" class="btn btn-primary" role="button">Sell</a>
 				</p>
-			</c:if>
+			</sec:authorize>
 			<table id="dataTable" class="table table-striped table-bordered" width="100%">
 				<col class="colWidth5">
 				<col class="colWidth10">

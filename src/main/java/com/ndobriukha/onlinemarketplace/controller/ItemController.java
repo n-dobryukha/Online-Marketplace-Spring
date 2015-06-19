@@ -8,17 +8,23 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("items")
 public class ItemController {
 
-	@RequestMapping("/all")
+	@RequestMapping("/show/all")
 	public ModelAndView showAll() throws Exception {
 		ModelAndView model = new ModelAndView("showitems");
 		model.addObject("model", "All");
 		return model;
 	}
 	
-	@RequestMapping("/my")
+	@RequestMapping("/show/my")
 	public ModelAndView showMy() throws Exception {
 		ModelAndView model = new ModelAndView("showitems");
 		model.addObject("model", "My");
+		return model;
+	}
+	
+	@RequestMapping("/new")
+	public ModelAndView showEdit() throws Exception {
+		ModelAndView model = new ModelAndView("edititem");
 		return model;
 	}
 }

@@ -50,44 +50,31 @@ require(
     		.on('success.form.bv', function(e) {
     			e.preventDefault();
 	            var $form = $(e.target),
-	            	bv = $form.data('bootstrapValidator'),
-	            	data = $form.serialize();
+	            	bv = $form.data('bootstrapValidator');
 	            
 	            $.ajax({
-                    url: "./login",
-                    type: "POST",
-                    data: data,
+                    url: this.action,
+                    type: this.method,
+                    data: $form.serialize(),
                     cache: false,
                     datatype: 'json',
                          
                     success: function (data, textStatus, jqXHR){
-                        //alert("success");
                         switch (data.status) {
-                        case "SUCCESS" :
-                            window.location.replace("./items/show/all");
-                        	break;
-                        case "NOTEXISTS":
-                        	bv.updateStatus("login","INVALID","blank")
-                    		bv.updateMessage("login","blank",data.errorMsg)
-                        	break;
-                        case "WRONGPASSWORD":
-                        	bv.updateStatus("password","INVALID","blank")
-                    		bv.updateMessage("password","blank",data.errorMsg)
+                        case "FAIL":
+                        	bv.updateStatus(data.field,"INVALID","blank")
+                    		bv.updateMessage(data.field,"blank",data.errorMsg)
                         	break;
                         case "EXCEPTION":
                         	alert("error: " + data.errorMsg);
                         	break;
                         default:
-                        	break;
+                        	window.location.replace("./items/show/all");
                         }
                     },
                          
                     error: function (jqXHR, textStatus, errorThrown){
                         alert("error - HTTP STATUS: "+jqXHR.status);
-                    },
-                         
-                    complete: function(jqXHR, textStatus){
-                        //alert("complete");
                     }                    
                 });
     		});
