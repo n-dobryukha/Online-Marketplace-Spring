@@ -25,7 +25,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/js/**").permitAll()
 				.antMatchers("/css/**").permitAll()
 				.antMatchers("/logout").permitAll()
-				.antMatchers("/items/show/all", "/rest/items/all").hasAnyRole("USER", "ANONYMOUS")
+				.antMatchers("/items/show/all", "/rest/items/all", "rest/user/registration").hasAnyRole("USER", "ANONYMOUS")
 				.antMatchers("/items/**", "/rest/**").hasRole("USER").and()
 			.formLogin()
 				.loginPage("/login").usernameParameter("login").permitAll()
@@ -37,8 +37,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/login")
 				.invalidateHttpSession(true);
 	}
-	
-	
 
 	// установка провайдера авторизации (может быть примитивная - InMemory, или
 	// на основе токенов, связанная с БД и т.д.

@@ -136,8 +136,8 @@ require(
 	            	data = $form.serializeObject();
 	            
 	            $.ajax({
-                    url: "./auth/registration",
-                    type: "POST",
+	            	url: this.action,
+                    type: this.method,
                     data: JSON.stringify(data),
                     cache: false,
                     datatype: 'json',
@@ -226,7 +226,7 @@ require(
 	            
 	            $.ajax({
                     url: this.action,
-                    type: "POST",
+                    type: this.method,
                     data: JSON.stringify(data),
                     cache: false,
                     datatype: 'json',

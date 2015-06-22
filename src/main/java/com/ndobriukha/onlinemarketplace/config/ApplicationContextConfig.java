@@ -18,6 +18,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
+import org.springframework.web.servlet.view.tiles3.TilesView;
 
 import com.ndobriukha.onlinemarketplace.dao.BidDao;
 import com.ndobriukha.onlinemarketplace.dao.GenericDao;
@@ -47,11 +50,27 @@ public class ApplicationContextConfig extends WebMvcConfigurerAdapter {
 		configurer.enable();
 	}
 	
-	@Bean(name = "viewResolver")
+	@Bean
+	public TilesConfigurer tilesConfigurer() {
+		TilesConfigurer tilesConfigurer = new TilesConfigurer();
+		tilesConfigurer.setDefinitions(new String[]{"/WEB-INF/tiles/tiles-definitions.xml"});
+		return tilesConfigurer;
+	}
+	
+	@Bean(name = "tilesViewResolver")
+	public UrlBasedViewResolver getUrlBasedViewResolver() {
+		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
+		viewResolver.setViewClass(TilesView.class);
+		viewResolver.setOrder(0);
+		return viewResolver;
+	}
+	
+	@Bean(name = "jspViewResolver")
 	public InternalResourceViewResolver getViewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setPrefix("/WEB-INF/jsp/");
+		viewResolver.setPrefix("/WEB-INF/views/");
 		viewResolver.setSuffix(".jsp");
+		viewResolver.setOrder(1);
 		return viewResolver;
 	}
 

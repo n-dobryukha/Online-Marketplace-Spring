@@ -1,20 +1,13 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<% request.setCharacterEncoding("UTF-8");
-response.setCharacterEncoding("UTF-8");%>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Edit Item</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/default.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/bootstrapValidator.min.css">
-</head>
-<body>
-	<%-- <%@include file="/WEB-INF/jspf/header.jspf" %> --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+	<c:if test="${not empty error}">
+		<p class="alert alert-danger">${error}</p>
+	</c:if>
+	<c:if test="${empty error}">
 	<fieldset class="container">
 		<legend>Edit Item</legend>
-		<form id="formEditItem" class="form-horizontal" action="<%=request.getContextPath()%>/items/save"
+		<form id="formEditItem" method="POST" action="<%=request.getContextPath()%>/rest/items/save"
+			class="form-horizontal"
 			data-bv-message="This value is not valid"
 			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
 			data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -81,6 +74,5 @@ response.setCharacterEncoding("UTF-8");%>
 			</div>
 		</form>
 	</fieldset>
-<script type="text/javascript" data-main="<%=request.getContextPath()%>/js/formValidator" src="<%=request.getContextPath()%>/js/require.js"></script>
-</body>
-</html>
+	<script type="text/javascript" data-main="<%=request.getContextPath()%>/js/formValidator" src="<%=request.getContextPath()%>/js/require.js"></script>
+	</c:if>

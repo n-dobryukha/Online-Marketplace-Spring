@@ -1,19 +1,7 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<% request.setCharacterEncoding("UTF-8");
-response.setCharacterEncoding("UTF-8");%>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Registration</title>
-<link rel="stylesheet" href="css/default.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="css/bootstrapValidator.min.css">
-</head>
-<body>
 	<fieldset class="container-main">
 		<legend>Registration</legend>
-		<form id="formRegistration" class="form-horizontal"
+		<form id="formRegistration" method="POST" action="<%=request.getContextPath()%>/registration"
+			class="form-horizontal"
 			data-bv-message="This value is not valid"
 			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
 			data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -73,7 +61,4 @@ response.setCharacterEncoding("UTF-8");%>
 			</div>
 		</form>
 	</fieldset>
-	
-<script type="text/javascript" data-main="js/formValidator" src="js/require.js"></script>
-</body>
-</html>
+	<script type="text/javascript" data-main="js/formValidator" src="js/require.js"></script>

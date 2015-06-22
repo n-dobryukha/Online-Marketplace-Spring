@@ -1,32 +1,8 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<% request.setCharacterEncoding("UTF-8");
-response.setCharacterEncoding("UTF-8");%>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Show Items</title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/default.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
-</head>
-<body>
-	<%-- <%@include file="/WEB-INF/jspf/header.jspf" %> --%>
-	<input type='hidden' id='type' value='${ model }'/>
+	<input type='hidden' id='type' value='${ type }'/>
 	<div class="container-fluid">
-		<a href="<c:url value="/logout" />">Logout</a>
 		<fieldset>
-			<legend class="h4">${ model } Items</legend>
-
-			<sec:authorize access="isAuthenticated()">
-				<p class="btn-group-xs">
-					<a href="<%=request.getContextPath()%>/items/show/all" type="button" class="btn btn-primary" role="button">Show All Items</a>
-					<a href="<%=request.getContextPath()%>/items/show/my" type="button" class="btn btn-primary" role="button">Show My Items</a>
-					<a href="<%=request.getContextPath()%>/items/new" type="button" class="btn btn-primary" role="button">Sell</a>
-				</p>
-			</sec:authorize>
+			<legend class="h4">${ type } Items</legend>
+			<input type="hidden" id="${_csrf.parameterName}" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<table id="dataTable" class="table table-striped table-bordered" width="100%">
 				<col class="colWidth5">
 				<col class="colWidth10">
@@ -99,5 +75,3 @@ response.setCharacterEncoding("UTF-8");%>
 		</div>
 	</div>
 	<script type="text/javascript" data-main="<%=request.getContextPath()%>/js/dataTabler" src="<%=request.getContextPath()%>/js/require.js"></script>
-</body>
-</html>

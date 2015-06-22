@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<definition name="base" template="/WEB-INF/views/templates/default.jsp">
+		<put-attribute name="title" value=""></put-attribute>
+		<put-attribute name="header" value="/WEB-INF/views/tiles/shared/header.jsp"></put-attribute>
+		<put-attribute name="menu" value=""></put-attribute>
+		<put-attribute name="content" value=""></put-attribute>
+		<put-attribute name="footer" value="/WEB-INF/views/tiles/shared/footer.jsp"></put-attribute>
+		<put-list-attribute name="javascripts"/>
+		<put-list-attribute name="stylesheets">
+			<add-attribute value="/css/default.css" />
+			<add-attribute value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+		</put-list-attribute>
+	</definition>
+	
+	<!-- Login page -->
+	<definition name="login" extends="base">
+		<put-attribute name="title" value="Login"></put-attribute>
+		<put-attribute name="header" value=""></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/tiles/user/login.jsp"></put-attribute>
+		<put-attribute name="footer" value=""></put-attribute>
+		<put-list-attribute name="stylesheets" inherit="true">
+			<add-attribute value="/css/bootstrapValidator.min.css" />
+		</put-list-attribute>
+	</definition>
+	
+	<!-- Registration page -->
+	<definition name="registration" extends="base">
+		<put-attribute name="title" value="Registration"></put-attribute>
+		<put-attribute name="header" value=""></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/tiles/user/registration.jsp"></put-attribute>
+		<put-attribute name="footer" value=""></put-attribute>
+		<put-list-attribute name="stylesheets" inherit="true">
+			<add-attribute value="/css/bootstrapValidator.min.css" />
+		</put-list-attribute>
+	</definition>
+	
+	<!-- Show Items page -->
+	<definition name="show" extends="base">
+		<put-attribute name="title" value="Show Items"></put-attribute>
+		<put-attribute name="menu" value="/WEB-INF/views/tiles/shared/menu.jsp"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/tiles/items/show.jsp"></put-attribute>
+		<put-list-attribute name="stylesheets" inherit="true">
+			<add-attribute value="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" />
+		</put-list-attribute>
+	</definition>
+	
+	<!-- Show Items page -->
+	<definition name="edit" extends="base">
+		<put-attribute name="title" value="Edit Item"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/tiles/items/edit.jsp"></put-attribute>
+		<put-list-attribute name="stylesheets" inherit="true">
+			<add-attribute value="/css/bootstrapValidator.min.css" />
+		</put-list-attribute>
+	</definition>
+	
+</tiles-definitions>

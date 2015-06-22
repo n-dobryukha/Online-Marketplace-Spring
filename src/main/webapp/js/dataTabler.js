@@ -33,8 +33,8 @@ require(
 					'dom': 'lt<"row"<"col-sm-5"i><"col-sm-7 input-group-sm"p>>',
 					'searching' : true,
 					'ajax' : {
-						'url': '../rest/items/' + $('#type').val().toLowerCase(),
-						'type': 'POST'
+						'url': '../../rest/items/' + $('#type').val().toLowerCase(),
+						'type': 'GET'
 					},
 					'columnDefs': [
 						{'targets':0, 'data' : 'uid'},

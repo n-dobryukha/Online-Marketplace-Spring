@@ -1,19 +1,7 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<% request.setCharacterEncoding("UTF-8");
-response.setCharacterEncoding("UTF-8");%>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Login</title>
-<link rel="stylesheet" href="css/default.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="css/bootstrapValidator.min.css">
-</head>
-<body>
 	<fieldset class="container-main">
 		<legend>Login</legend>
-		<form id="formLogin" class="form-horizontal" method="POST" action="./login"
+		<form id="formLogin" method="POST" action="<%=request.getContextPath()%>/login"
+			class="form-horizontal"
 			data-bv-message="This value is not valid"
 			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
 			data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -36,12 +24,10 @@ response.setCharacterEncoding("UTF-8");%>
 			<div class="form-group">
 				<div class="col-sm-offset-4 col-sm-8">
 					<button type="submit" class="btn btn-primary btn-sm">Sign in</button>
-					<a href="./auth/guest" class="btn btn-success btn-sm" role="button">As guest</a>
-					<a href="registration.jsp" class="btn btn-info btn-sm" role="button">Registration</a>
+					<a href="<%=request.getContextPath()%>/items/show/all" class="btn btn-success btn-sm" role="button">As guest</a>
+					<a href="<%=request.getContextPath()%>/registration" class="btn btn-info btn-sm" role="button">Registration</a>
 				</div>
 			</div>
 		</form>
 	</fieldset>
-<script type="text/javascript" data-main="js/formValidator" src="js/require.js"></script>
-</body>
-</html>
+	<script type="text/javascript" data-main="js/formValidator" src="js/require.js"></script>
