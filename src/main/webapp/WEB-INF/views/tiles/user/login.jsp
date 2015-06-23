@@ -19,8 +19,7 @@
 					<input type="password" class="form-control" id="password" name="password"
 						placeholder="Password" required="required">
 				</div>
-			</div>
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			</div>			
 			<div class="form-group">
 				<div class="col-sm-offset-4 col-sm-8">
 					<button type="submit" class="btn btn-primary btn-sm">Sign in</button>

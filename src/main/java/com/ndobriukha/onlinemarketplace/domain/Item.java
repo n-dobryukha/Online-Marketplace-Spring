@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
@@ -27,19 +31,27 @@ public class Item {
 	private Long id;
 	
 	@ManyToOne(cascade = CascadeType.REMOVE)
-	@JoinColumn(name="SELLER_ID")	
+	@JoinColumn(name="SELLER_ID")
+	@NotNull
 	private User seller;
 	
 	@Column(name="TITLE")
+	@NotNull
 	private String title;
 	
 	@Column(name="DESCRIPTION")
+	@NotNull
 	private String description;
 	
 	@Column(name="START_PRICE")
+	@NotNull
+	@DecimalMin("0.01")
 	private double startPrice;
 	
 	@Column(name="TIME_LEFT")
+	@NotNull
+	@Min(value=1)
+	@Max(value=1000)
 	private int timeLeft;
 	
 	@Column(name="START_BIDDING")

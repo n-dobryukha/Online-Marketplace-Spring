@@ -7,6 +7,8 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="_csrf" content="${_csrf.token}"/>
+	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 	<title><tiles:insertAttribute name="title"></tiles:insertAttribute></title>
 	<!-- stylesheets -->
     <c:forEach var="css" items="${stylesheets}">

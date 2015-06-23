@@ -65,8 +65,9 @@ require(
 							'render': function(data, type, row) {
 								switch (data) {
 								case 'bid':
-									var minValue = ((row.bestOffer === "") ? row.startPrice : (parseFloat(row.bestOffer) + parseFloat(row.bidInc)).toFixed(2));
-									return "<form method='post' data-item-id='" + row.uid + "'><div class='form-group'><div class='input-group input-group-xs'><div class='input-group-addon'>$</div><input type='text' name='bidValue' class='form-control' placeholder='" + minValue + "' min='" + minValue + "' required='required'><span class='input-group-btn'><button class='btn btn-default' type='submit'>Bid</button></span></div></div></form>";
+									var bidInc = parseFloat(row.bidInc).toFixed(2),
+										minValue = ((row.bestOffer === "") ? row.startPrice : (parseFloat(row.bestOffer) + bidInc));
+									return "<form method='post' data-item-id='" + row.uid + "'><div class='form-group'><div class='input-group input-group-xs'><div class='input-group-addon'>$</div><input type='number' name='bidValue' class='form-control' placeholder='" + minValue + "' min='" + minValue + "' step='" + bidInc + "' required='required'><span class='input-group-btn'><button class='btn btn-default' type='submit'>Bid</button></span></div></div></form>";
 									break;
 								case 'buy':
 									return "<form method='post' data-item-id='" + row.uid + "'><input type='hidden' name='bidValue' value='" + row.startPrice + "'><div class='btn-group btn-group-justified'><div class='btn-group' role='group'><button class='btn btn-default btn-xs' type='submit'>Buy</button></div></div></form>"

@@ -1,66 +1,65 @@
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-	<c:if test="${not empty error}">
-		<p class="alert alert-danger">${error}</p>
-	</c:if>
-	<c:if test="${empty error}">
 	<fieldset class="container">
 		<legend>Edit Item</legend>
-		<form id="formEditItem" method="POST" action="<%=request.getContextPath()%>/rest/items/save"
+		<form:form id="formEditItem" action="${contextPath}/rest/items/save" commandName="item"
 			class="form-horizontal"
 			data-bv-message="This value is not valid"
 			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
 			data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
 			data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
-			<input type="hidden" id="itemId" name="itemId" value="${ model.getId() }" ${ (model == null) ? "disabled='disabled'" : "" }>
+			<input type="hidden" id="_method" value="${httpMethod}"/>
+			<form:input type="hidden" path="id"/>			
 			<div class="form-group">
-				<label for="title" class="col-sm-4 control-label">Title of Item</label>
+				<form:label path="title" class="col-sm-4 control-label">Title of Item</form:label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="title" name="title"
-						placeholder="Title of Item" required="required" autofocus="autofocus" value="${ model.getTitle() }">
+					<form:input type="text" path="title" class="form-control"
+						placeholder="Title of Item" required="required" autofocus="autofocus"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="description" class="col-sm-4 control-label">Description</label>
+				<form:label path="description" class="col-sm-4 control-label">Description</form:label>
 				<div class="col-sm-4">
-					<textarea rows="3" cols="" class="form-control" id="description" name="description"
-						placeholder="Description" required="required">${ model.getDescription() }</textarea>
+					<form:textarea rows="3" cols="" class="form-control" path="description"
+						placeholder="Description" required="required"/>
 				</div>
 			</div>			
 			<div class="form-group">
-				<label for="startPrice" class="col-sm-4 control-label">Start price</label>
+				<form:label path="startPrice" class="col-sm-4 control-label">Start price</form:label>
 				<div class="col-xs-2">
 					<div class="input-group">
 						<div class="input-group-addon">$</div>
-						<input type="text" class="form-control" id="startPrice" name="startPrice"
-							placeholder="0.00" required="required" min="0" value="${ model.getStartPrice() }">
+						<form:input type="text" class="form-control" path="startPrice"
+							placeholder="0.00" required="required" min="0"/>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="timeLeft" class="col-sm-4 control-label">Time Left</label>
+				<form:label path="timeLeft" class="col-sm-4 control-label">Time Left</form:label>
 				<div class="col-xs-2">
-					<input type="number" class="form-control" id="timeLeft" name="timeLeft"
-						min="1" max="1000" step="1" placeholder="Time in hour" required="required" value="${ model.getTimeLeft() }">
+					<form:input type="number" class="form-control" path="timeLeft"
+						min="1" max="1000" step="1" placeholder="Time in hour" required="required"/>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="buyItNow" class="col-sm-4 control-label">Buy It Now</label>
+				<label for="buyItNow1" class="col-sm-4 control-label">Buy It Now</label>
 				<div class="col-sm-4">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" id="buyItNow" name="buyItNow" value="Y" aria-label="..." ${ model.isBuyItNow() ? "checked='checked'" : "" }>
+							<form:checkbox path="buyItNow" aria-label="..."/>
 						</label>
 					</div>
 				</div>
 			</div>
-			<div class="form-group" style="${ model.isBuyItNow() ? 'display: none' : '' }">
-				<label for="bidIncrement" class="col-sm-4 control-label">Bid Increment</label>
+			<div class="form-group" style="${ item.isBuyItNow() ? 'display: none' : ''}">
+				<form:label path="bidIncrement" class="col-sm-4 control-label">Bid Increment</form:label>
 				<div class="col-xs-2">
 					<div class="input-group">
 						<div class="input-group-addon">$</div>
-						<input type="text" class="form-control" id="bidIncrement" name="bidIncrement"
-							placeholder="0.00" required="required" min="0" value="${ model.getBidIncrement() }" ${ model.isBuyItNow() ? "disabled='disabled'" : "" }>
+						<form:input type="text" class="form-control" path="bidIncrement"
+							placeholder="0.00" required="required" min="0" disabled="${ item.isBuyItNow() }"/>
 					</div>
 				</div>
 			</div>
@@ -72,7 +71,6 @@
 					<button type="reset" class="btn btn-info btn-sm" id="btnReset">Reset</button>
 				</div>
 			</div>
-		</form>
+		</form:form>
 	</fieldset>
-	<script type="text/javascript" data-main="<%=request.getContextPath()%>/js/formValidator" src="<%=request.getContextPath()%>/js/require.js"></script>
-	</c:if>
+	<script type="text/javascript" data-main="${contextPath}/js/formValidator" src="${contextPath}/js/require.js"></script>

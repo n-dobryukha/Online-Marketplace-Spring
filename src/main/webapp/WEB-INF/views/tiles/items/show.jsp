@@ -2,7 +2,6 @@
 	<div class="container-fluid">
 		<fieldset>
 			<legend class="h4">${ type } Items</legend>
-			<input type="hidden" id="${_csrf.parameterName}" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			<table id="dataTable" class="table table-striped table-bordered" width="100%">
 				<col class="colWidth5">
 				<col class="colWidth10">

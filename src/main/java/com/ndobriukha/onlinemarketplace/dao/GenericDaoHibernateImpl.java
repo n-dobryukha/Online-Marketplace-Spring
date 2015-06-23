@@ -68,7 +68,11 @@ public abstract class GenericDaoHibernateImpl<T, PK extends Serializable> implem
 	@Override
 	@Transactional
 	public void update(T object) throws HibernateException {
-		getSession().update(object);
+		try {
+			getSession().update(object);
+		} catch (Exception e) {
+			System.out.println(String.format("Exception on update: %s", e.getMessage()));
+		}
 	};
 
 	/** Delete object */

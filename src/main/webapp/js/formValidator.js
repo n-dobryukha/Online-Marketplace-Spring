@@ -50,9 +50,14 @@ require(
     		.on('success.form.bv', function(e) {
     			e.preventDefault();
 	            var $form = $(e.target),
-	            	bv = $form.data('bootstrapValidator');
+	            	bv = $form.data('bootstrapValidator'),
+	            	header = $("meta[name='_csrf_header']").attr("content"),
+	            	token = $("meta[name='_csrf']").attr("content");
 	            
 	            $.ajax({
+	            	beforeSend: function(xhr) {
+	                    xhr.setRequestHeader(header, token);
+	                },
                     url: this.action,
                     type: this.method,
                     data: $form.serialize(),
@@ -133,9 +138,14 @@ require(
     			e.preventDefault();
 	            var $form = $(e.target),
 	            	bv = $form.data('bootstrapValidator'),
-	            	data = $form.serializeObject();
-	            
+	            	data = $form.serializeObject(),
+	            	header = $("meta[name='_csrf_header']").attr("content"),
+	            	token = $("meta[name='_csrf']").attr("content");
+		            
 	            $.ajax({
+	            	beforeSend: function(xhr) {
+	            		xhr.setRequestHeader(header, token);
+	            	},
 	            	url: this.action,
                     type: this.method,
                     data: JSON.stringify(data),
@@ -180,16 +190,33 @@ require(
     		$('#formEditItem')
 			.bootstrapValidator({
 				fields : {
+					title: {
+						validators: {
+							blank: {}
+						}
+					},
+					description: {
+						validators: {
+							blank: {}
+						}
+					},
 					startPrice : {
 						validators: {
+							blank: {},
 							numeric: {},
 							greaterThan: {
 		                        inclusive: false
 		                    }
 		                }
 					},
+					timeLeft: {
+						validators: {
+							blank: {}
+						}
+					},
 					bidIncrement : {
 						validators: {
+							blank: {},
 							numeric: {},
 							greaterThan: {
 		                        inclusive: false
@@ -215,33 +242,41 @@ require(
 			})
 			.on('success.form.bv', function(e) {
     			e.preventDefault();
+    			
 	            var $form = $(e.target),
 	            	bv = $form.data('bootstrapValidator'),
-	            	data = $form.serializeObject();
-	            
+	            	data = $form.serializeObject(),
+	            	header = $("meta[name='_csrf_header']").attr("content"),
+	            	token = $("meta[name='_csrf']").attr("content"),
+	            	method = $("#_method").val();
+		        
 	            if (!confirm('Are you sure?')) {
 	            	$form.find('button[type="submit"]').prop('disabled', false);
 	            	return;
 	            }
 	            
 	            $.ajax({
-                    url: this.action,
-                    type: this.method,
+	            	beforeSend: function(xhr) {
+	            		xhr.setRequestHeader(header, token);
+	            	},
+	            	url: this.action,
+                    type: method,
                     data: JSON.stringify(data),
                     cache: false,
                     datatype: 'json',
-                    contentType: "application/json",
+                    contentType: "application/json; charset=utf-8",
                          
                     success: function (data, textStatus, jqXHR){
                         switch (data.status) {
                         case "SUCCESS" :
-                            if ($('#itemId').val() === '') window.location.replace("./show/my");
+                            if ($('#id').val() === '') window.location.replace("./show/my");
                             else window.location.replace("../show/my");
                         	break;
                         case "WRONGPARAM":
                         	var fieldErrors = data.fieldErrors;
                         	for (var fieldName in data.fieldErrors) {
-                        		bv.updateStatus(fieldName,"INVALID",fieldErrors[fieldName]);
+                        		bv.updateStatus(fieldName,"INVALID","blank");
+                        		bv.updateMessage(fieldName,"blank",fieldErrors[fieldName]);
                         	}
                         	break;
                         case "EXCEPTION":

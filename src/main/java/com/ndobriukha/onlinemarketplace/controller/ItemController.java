@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ndobriukha.onlinemarketplace.dao.ItemDao;
 import com.ndobriukha.onlinemarketplace.domain.Item;
@@ -39,19 +40,44 @@ public class ItemController {
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-	public String showNew(Locale locale, Model model) throws Exception {
-		return "edit";
+	public ModelAndView showNew() throws Exception {
+		ModelAndView modelAndView = new ModelAndView("edit");
+		modelAndView.addObject("httpMethod", "PUT");
+		modelAndView.addObject("item", new Item());
+		return modelAndView;
+		//return new ModelAndView("edit", "item", new Item());
 	}
 	
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	/*@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	public String showEdit(Locale locale, Model model, @PathVariable Long id, HttpServletRequest req, HttpServletResponse res) throws Exception {
 		Item item = itemDao.get(id);
 		if (item != null) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = (User) auth.getPrincipal();
-			if (item.getId().equals(user.getId())) {			
-				model.addAttribute("model", item);
+			if (item.getSeller().equals(user)) {			
+				model.addAttribute("item", item);
 				return "edit";
+			} else {
+				res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied.");
+				return null;
+			}			
+		} else {
+			res.sendRedirect( req.getContextPath() + "/items/new");
+			return null;
+		}
+	}*/
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	public ModelAndView showEdit(@PathVariable Long id, HttpServletRequest req, HttpServletResponse res) throws Exception {
+		Item item = itemDao.get(id);
+		if (item != null) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = (User) auth.getPrincipal();
+			if (item.getSeller().equals(user)) {			
+				ModelAndView modelAndView = new ModelAndView("edit");
+				modelAndView.addObject("httpMethod", "POST");
+				modelAndView.addObject("item", item);
+				return modelAndView;
 			} else {
 				res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied.");
 				return null;
