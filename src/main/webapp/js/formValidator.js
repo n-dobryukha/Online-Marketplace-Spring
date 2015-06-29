@@ -62,7 +62,6 @@ require(
                     type: this.method,
                     data: $form.serialize(),
                     cache: false,
-                    datatype: 'json',
                          
                     success: function (data, textStatus, jqXHR){
                         switch (data.status) {
@@ -138,51 +137,70 @@ require(
     			e.preventDefault();
 	            var $form = $(e.target),
 	            	bv = $form.data('bootstrapValidator'),
-	            	data = $form.serializeObject(),
+	            	formData = $form.serializeObject(),
 	            	header = $("meta[name='_csrf_header']").attr("content"),
 	            	token = $("meta[name='_csrf']").attr("content");
-		            
+
+	            if (!confirm('Are you sure?')) {
+	            	$form.find('button[type="submit"]').prop('disabled', false);
+	            	return;
+	            }
+	            
 	            $.ajax({
 	            	beforeSend: function(xhr) {
 	            		xhr.setRequestHeader(header, token);
 	            	},
 	            	url: this.action,
                     type: this.method,
-                    data: JSON.stringify(data),
+                    data: JSON.stringify(formData),
                     cache: false,
                     datatype: 'json',
-                    contentType: "application/json",
+                    contentType: "application/json;charset=UTF-8",
                          
                     success: function (data, textStatus, jqXHR){
-                        //alert("success");
-                        switch (data.status) {
-                        case "SUCCESS" :
-                            window.location.replace("./items/show/all");
-                        	break;
-                        case "WRONGPARAM":
-                        	var fieldErrors = data.fieldErrors;
-                        	for (var fieldName in data.fieldErrors) {
-                        		bv.updateStatus(fieldName,"INVALID",fieldErrors[fieldName]);
-                        	}
-                        	break;
-                        case "EXISTSLOGIN":
-                        	bv.updateStatus("login","INVALID","blank");
-                        	bv.updateMessage("login","blank",data.errorMsg);
-                        	break;
-                        case "EXCEPTION":
-                        	alert("error: " + data.errorMsg);
-                        	break;
-                        default:
-                        	break;
-                        }
+                    	switch (jqXHR.status) {
+						case 201:
+							$.ajax({
+								url: './login',
+								type: 'POST',
+								data: this.data,
+								cache: false,
+			                    datatype: 'json',
+			                    contentType: "application/json;charset=UTF-8",
+			                         
+			                    success: function (data, textStatus, jqXHR){
+			                    	window.location.replace("./items/show/all");
+			                    }
+							})
+							break;
+						default:
+							switch (data.status) {
+	                        case "WRONGPARAM":
+	                        	var fieldErrors = data.fieldErrors;
+	                        	for (var fieldName in data.fieldErrors) {
+	                        		bv.updateStatus(fieldName,"INVALID","blank");
+	                        		bv.updateMessage(fieldName,"blank",fieldErrors[fieldName]);
+	                        	}
+	                        default:
+	                        	$form.find('button[type="submit"]').prop('disabled', false);
+	                        	break;
+	                        }
+							break;
+						}
                     },
                          
-                    error: function (jqXHR, textStatus, errorThrown){
-                        alert("error - HTTP STATUS: "+jqXHR.status);
-                    },
-                         
-                    complete: function(jqXHR, textStatus){
-                        //alert("complete");
+                    error: function (jqXHR){
+                    	switch (jqXHR.status) {
+						case 409:
+							bv.updateStatus("login","INVALID","blank");
+                    		bv.updateMessage("login","blank","Login already exists.");
+                    		$form.find('button[type="submit"]').prop('disabled', false);
+                    		break;
+						default:
+							alert("ERROR\r\nHTTP STATUS: "+jqXHR.status+" - "+jqXHR.statusText);
+							$form.find('button[type="submit"]').prop('disabled', false);
+                        	break;
+                        }                    	
                     }                    
                 });
     		});

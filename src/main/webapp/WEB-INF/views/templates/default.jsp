@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <tiles:importAttribute name="javascripts"/>
 <tiles:importAttribute name="stylesheets"/>
 <!DOCTYPE html>
@@ -29,13 +28,11 @@
         <tiles:insertAttribute name="header"></tiles:insertAttribute>
     </div>
     <!-- end header  -->
-    <sec:authorize access="isAuthenticated()">
-	<!-- menu -->
+    <!-- menu -->
 	<div id="menu">
 		<tiles:insertAttribute name="menu"></tiles:insertAttribute>
 	</div>
 	<!-- end menu -->
-	</sec:authorize>
 	<!-- content -->
 	<div id="content">
 		<tiles:insertAttribute name="content"></tiles:insertAttribute>

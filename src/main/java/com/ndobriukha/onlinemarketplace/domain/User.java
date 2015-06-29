@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ndobriukha.onlinemarketplace.util.PasswordHash;
 
 @Entity
@@ -32,6 +31,7 @@ public class User {
 	private String fullName;
 	
 	@Column(name="BILLING_ADDRESS")
+	@NotNull
 	private String billingAddress;
 	
 	@Column(name="LOGIN")
@@ -39,11 +39,13 @@ public class User {
 	@Length(min=6,max=30)
 	private String login;
 	
-	@Length(min=6)
 	@Column(name="PASSWORD")
+	@NotNull
+	@Length(min=6)
 	private String password;
 	
 	@Column(name="EMAIL")
+	@NotNull
 	@Email
 	private String email;
 	
@@ -76,7 +78,6 @@ public class User {
 		this.fullName = fullName;
 	}
 
-	@JsonIgnore
 	public String getBillingAddress() {
 		return billingAddress;
 	}
@@ -85,7 +86,6 @@ public class User {
 		this.billingAddress = billingAddress;
 	}
 
-	@JsonIgnore
 	public String getLogin() {
 		return login;
 	}
@@ -94,7 +94,6 @@ public class User {
 		this.login = login;
 	}
 
-	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

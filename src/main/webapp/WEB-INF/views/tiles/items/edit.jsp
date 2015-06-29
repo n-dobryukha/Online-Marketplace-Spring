@@ -4,7 +4,7 @@
 
 	<fieldset class="container">
 		<legend>Edit Item</legend>
-		<form:form id="formEditItem" action="${contextPath}/rest/items/save" commandName="item"
+		<form:form id="formEditItem" action="${contextPath}/rest/item/${actionUrl}" commandName="item"
 			class="form-horizontal"
 			data-bv-message="This value is not valid"
 			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"

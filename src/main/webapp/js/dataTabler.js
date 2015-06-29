@@ -33,7 +33,7 @@ require(
 					'dom': 'lt<"row"<"col-sm-5"i><"col-sm-7 input-group-sm"p>>',
 					'searching' : true,
 					'ajax' : {
-						'url': '../../rest/items/' + $('#type').val().toLowerCase(),
+						'url': '../../rest/item/?scope=' + $('#type').val().toLowerCase(),
 						'type': 'GET'
 					},
 					'columnDefs': [
@@ -66,11 +66,11 @@ require(
 								switch (data) {
 								case 'bid':
 									var bidInc = parseFloat(row.bidInc).toFixed(2),
-										minValue = ((row.bestOffer === "") ? row.startPrice : (parseFloat(row.bestOffer) + bidInc));
-									return "<form method='post' data-item-id='" + row.uid + "'><div class='form-group'><div class='input-group input-group-xs'><div class='input-group-addon'>$</div><input type='number' name='bidValue' class='form-control' placeholder='" + minValue + "' min='" + minValue + "' step='" + bidInc + "' required='required'><span class='input-group-btn'><button class='btn btn-default' type='submit'>Bid</button></span></div></div></form>";
+										minValue = ((row.bestOffer === "") ? row.startPrice : (parseFloat(row.bestOffer) + parseFloat(bidInc)));
+									return "<form method='post' data-item-id='" + row.uid + "'><div class='form-group'><div class='input-group input-group-xs'><div class='input-group-addon'>$</div><input type='number' name='amount' class='form-control' placeholder='" + minValue + "' min='" + minValue + "' step='" + bidInc + "' required='required'><span class='input-group-btn'><button class='btn btn-default' type='submit'>Bid</button></span></div></div></form>";
 									break;
 								case 'buy':
-									return "<form method='post' data-item-id='" + row.uid + "'><input type='hidden' name='bidValue' value='" + row.startPrice + "'><div class='btn-group btn-group-justified'><div class='btn-group' role='group'><button class='btn btn-default btn-xs' type='submit'>Buy</button></div></div></form>"
+									return "<form method='post' data-item-id='" + row.uid + "'><input type='hidden' name='amount' value='" + row.startPrice + "'><div class='btn-group btn-group-justified'><div class='btn-group' role='group'><button class='btn btn-default btn-xs' type='submit'>Buy</button></div></div></form>"
 								case 'edit':
 									return "<div class='btn-group btn-group-justified' role='group' aria-label='...'>" +
 												"<div class='btn-group btn-group-xs' role='group'>" +
@@ -106,9 +106,10 @@ require(
 			    			e.preventDefault();
 				            var $form = $(e.target),
 				            	itemId = $form.data('item-id'),
-				            	value = $form.find('input[name="bidValue"]').val();
+				            	data = $form.serialize(),
 				            	bv = $form.data('bootstrapValidator'),
-				            	data = $form.serialize();
+				            	header = $("meta[name='_csrf_header']").attr("content"),
+				            	token = $("meta[name='_csrf']").attr("content");
 				            
 				            if (!confirm('Are you sure?')) {
 				            	$form.find('button[type="submit"]').prop('disabled', false);
@@ -116,14 +117,16 @@ require(
 				            }
 				            	
 				            $.ajax({
-			                    url: "../bid/" + itemId,
+				            	beforeSend: function(xhr) {
+				                    xhr.setRequestHeader(header, token);
+				                },			                    
+			                    url: "../../rest/item/" + itemId + "/bid/",
 			                    type: "POST",
 			                    data: data,
 			                    cache: false,
-			                    datatype: 'json',
 			                         
 			                    success: function (data, textStatus, jqXHR){
-			                    	table.row( $form.closest('tr') ).data( JSON.parse(data.data) ).draw();
+			                    	table.row( $form.closest('tr') ).data( data ).draw();
 			                    },
 			                         
 			                    error: function (jqXHR, textStatus, errorThrown){
@@ -143,27 +146,29 @@ require(
 					$('#dataTable').find('button[type="delete"]').each(function() {
 						$(this).on('click', function() {
 							var itemId = this.value,
-								row = $(this).closest('tr');
+								row = $(this).closest('tr'),
+				            	header = $("meta[name='_csrf_header']").attr("content"),
+				            	token = $("meta[name='_csrf']").attr("content");
 
 							if (!confirm('Are you sure?')) {
 								return;
 							}
 							
 							$.ajax({
-			                    url: "../delete/" + itemId,
+								beforeSend: function(xhr) {
+				                    xhr.setRequestHeader(header, token);
+				                },
+			                    url: "../../rest/item/" + itemId,
 			                    type: "DELETE",
 			                    cache: false,
-			                    datatype: 'json',
 
 			                    success: function (data, textStatus, jqXHR){
 			                    	switch (data.status) {
-			                        case "SUCCESS" :
-			                        	table.row( row ).remove().draw(false);
-			                        	break;
 			                        case "EXCEPTION":
 			                        	alert("error: " + data.errorMsg);
 			                        	break;
 			                        default:
+			                        	table.row( row ).remove().draw(false);
 			                        	break;
 			                    	}
 			                    },
@@ -184,14 +189,14 @@ require(
 					var table;
 					if ( $.fn.dataTable.isDataTable( '#biddingTable' ) ) {
 					    table = $('#biddingTable').DataTable();
-					    table.ajax.url( '../bids/' + itemId ).load();
+					    table.ajax.url( '../../rest/item/' + itemId + '/bid/' ).load();
 					}
 					else {
 						table = $('#biddingTable').DataTable({
 							'retrieve': true,
 							'ajax' : {
-								'url': '../bids/' + itemId,
-								'type': 'POST'
+								'url': '../../rest/item/' + itemId + '/bid/',
+								'type': 'GET'
 							},
 							'columns': [
 								{ data : 'count'},

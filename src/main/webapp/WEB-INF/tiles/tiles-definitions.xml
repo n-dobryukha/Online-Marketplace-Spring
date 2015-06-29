@@ -49,10 +49,19 @@
 		</put-list-attribute>
 	</definition>
 	
-	<!-- Show Items page -->
+	<!-- Show edit page -->
 	<definition name="edit" extends="base">
 		<put-attribute name="title" value="Edit Item"></put-attribute>
 		<put-attribute name="content" value="/WEB-INF/views/tiles/items/edit.jsp"></put-attribute>
+		<put-list-attribute name="stylesheets" inherit="true">
+			<add-attribute value="/css/bootstrapValidator.min.css" />
+		</put-list-attribute>
+	</definition>
+	
+	<!-- Show search page -->
+	<definition name="search" extends="base">
+		<put-attribute name="title" value="Search Item"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/views/tiles/items/search.jsp"></put-attribute>
 		<put-list-attribute name="stylesheets" inherit="true">
 			<add-attribute value="/css/bootstrapValidator.min.css" />
 		</put-list-attribute>

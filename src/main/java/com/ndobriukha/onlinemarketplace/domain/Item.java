@@ -1,8 +1,7 @@
 package com.ndobriukha.onlinemarketplace.domain;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +29,7 @@ public class Item {
 	@SequenceGenerator(name = "id_Sequence", sequenceName = "ITEMS_PK_SEQ", allocationSize = 1)
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne(/*cascade = CascadeType.REMOVE*/)
 	@JoinColumn(name="SELLER_ID")
 	@NotNull
 	private User seller;
@@ -55,7 +54,8 @@ public class Item {
 	private int timeLeft;
 	
 	@Column(name="START_BIDDING")
-	private Timestamp startBidding;
+	@Type(type = "timestamp")
+	private Date startBidding;
 	
 	@Column(name="BUY_IT_NOW")
 	@Type(type="yes_no")
@@ -120,11 +120,11 @@ public class Item {
 	}
 
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getStartBidding() {
+	public Date getStartBidding() {
 		return startBidding;
 	}
 
-	public void setStartBidding(Timestamp startBidding) {
+	public void setStartBidding(Date startBidding) {
 		this.startBidding = startBidding;
 	}
 

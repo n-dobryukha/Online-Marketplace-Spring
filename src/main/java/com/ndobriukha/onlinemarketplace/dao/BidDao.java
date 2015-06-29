@@ -1,15 +1,6 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
-import org.hibernate.SessionFactory;
+import java.io.Serializable;
 
-import com.ndobriukha.onlinemarketplace.domain.Bid;
-
-public class BidDao extends GenericDaoHibernateImpl<Bid, Long> {
-	
-	public BidDao() {
-	}
-	
-	public BidDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
-	}
+public interface BidDao<T, PK extends Serializable> extends GenericDao<T, PK> {
 }

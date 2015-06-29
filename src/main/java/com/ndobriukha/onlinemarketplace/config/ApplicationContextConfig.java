@@ -23,7 +23,7 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 
 import com.ndobriukha.onlinemarketplace.dao.BidDao;
-import com.ndobriukha.onlinemarketplace.dao.GenericDao;
+import com.ndobriukha.onlinemarketplace.dao.BidDaoImpl;
 import com.ndobriukha.onlinemarketplace.dao.ItemDao;
 import com.ndobriukha.onlinemarketplace.dao.ItemDaoImpl;
 import com.ndobriukha.onlinemarketplace.dao.UserDao;
@@ -127,7 +127,7 @@ public class ApplicationContextConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	@Bean(name = "bidDao")
-	public GenericDao<Bid, Long> getBidDao(SessionFactory sessionFactory) {
-		return new BidDao(sessionFactory);
+	public BidDao<Bid, Long> getBidDao(SessionFactory sessionFactory) {
+		return new BidDaoImpl(sessionFactory);
 	}
 }

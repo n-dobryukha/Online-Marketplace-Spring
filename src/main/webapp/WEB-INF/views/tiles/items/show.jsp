@@ -58,7 +58,7 @@
 					<table id="biddingTable" class="table table-striped table-bordered" width="100%">
 						<thead>
 							<tr>
-								<th>№</th>
+								<th>&#8470;</th>
 								<th>Bidder</th>
 								<th>Amount</th>
 								<th>Date Time</th>

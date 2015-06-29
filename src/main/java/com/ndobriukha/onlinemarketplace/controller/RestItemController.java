@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -23,85 +24,84 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ndobriukha.onlinemarketplace.dao.BidDao;
 import com.ndobriukha.onlinemarketplace.dao.ItemDao;
 import com.ndobriukha.onlinemarketplace.domain.Bid;
 import com.ndobriukha.onlinemarketplace.domain.Item;
 import com.ndobriukha.onlinemarketplace.domain.User;
 
 @RestController
-@RequestMapping("/rest/items")
+@RequestMapping("/rest/item")
 public class RestItemController {
 
 	@Autowired
 	private ItemDao<Item, Long> itemDao;
 	
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
-    public Map<String, List<Map<String, Object>>> getAllItems(Authentication auth) {
-		final List<Map<String, Object>> data = new ArrayList<Map<String,Object>>();
-		List<Item> items = itemDao.get();		
-		for (Item item: items) {
-			if (item.isSold()) { // || (item.getSellerId().equals(user.getId()))) {
-				continue;
-			}
-			Map<String, Object> dataItem = buildItemData(item);
-			if ((auth != null) && (auth.isAuthenticated())) {
-				User user = (User) auth.getPrincipal();
-				if (item.getSeller().equals(user)) {
-					dataItem.put("action", "edit");
-				}				
-			} else {
-				dataItem.put("action", "");
-			}
-			data.add(dataItem);
-		}
-		Map<String, List<Map<String, Object>>> results = new HashMap<String, List<Map<String, Object>>>();
-		results.put("data", data);
-        return results;
-    }
+	@Autowired
+	private BidDao<Bid, Long> bidDao;
 	
-	@RequestMapping(value = "/my", method = RequestMethod.GET)
-    public Map<String, List<Map<String, Object>>> getMyItems(Authentication auth) {
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+    public Map<String, List<Map<String, Object>>> getItems(@RequestParam String scope, Authentication auth) {
 		User user = null;
 		if ((auth != null) && (auth.isAuthenticated())) {
 			user = (User) auth.getPrincipal();
 		}
 		final List<Map<String, Object>> data = new ArrayList<Map<String,Object>>();
-		List<Item> items = itemDao.get();		
+		List<Item> items = itemDao.get();
 		for (Item item: items) {
-			List<Bid> bids = itemDao.getAllBidsByItem(item);
-			boolean isInclude = false;
-			for (Bid bid: bids) {
-				if (bid.getBidder().equals(user)) {
-					isInclude = true;
-					break;
-				}
-			}
-			if ((!isInclude) && (!item.getSeller().equals(user))) {
-				continue;
-			}
 			Map<String, Object> dataItem = buildItemData(item);
-			if (item.isSold()) {
-				dataItem.put("action", "sold");
-			} else {
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(item.getStartBidding());
-				cal.add(Calendar.HOUR, item.getTimeLeft());
-				if (cal.before(Calendar.getInstance())) {
-					dataItem.put("action", "time is up");
-				} else {
-					if (!isInclude) {
+			switch (scope) {
+			case "all":
+				if (item.isSold()) {
+					continue;
+				}
+				if (user != null) {
+					if (user.equals(item.getSeller())) {
 						dataItem.put("action", "edit");
 					}
+				} else {
+					dataItem.put("action", "");
 				}
+				break;
+			case "my":
+				List<Bid> bids = itemDao.getAllBidsByItem(item);
+				boolean isInclude = false;
+				for (Bid bid: bids) {
+					if (bid.getBidder().equals(user)) {
+						isInclude = true;
+						break;
+					}
+				}
+				if ((!isInclude) && (!item.getSeller().equals(user))) {
+					continue;
+				}
+				if (item.isSold()) {
+					dataItem.put("action", "sold");
+				} else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(item.getStartBidding());
+					cal.add(Calendar.HOUR, item.getTimeLeft());
+					if (cal.before(Calendar.getInstance())) {
+						dataItem.put("action", "time is up");
+					} else {
+						if (!isInclude) {
+							dataItem.put("action", "edit");
+						}
+					}
+				}
+				break;	
+			default:
+				continue;
 			}
 			data.add(dataItem);
 		}
 		Map<String, List<Map<String, Object>>> results = new HashMap<String, List<Map<String, Object>>>();
 		results.put("data", data);
-        return results;
-    }
+		return results;
+	}
 	
 	@SuppressWarnings("serial")
 	private Map<String, Object> getEmptyItemData() {
@@ -122,6 +122,7 @@ public class RestItemController {
 	private Map<String, Object> buildItemData(Item item) {
 		Map<String, Object> data = getEmptyItemData();
 		NumberFormat numberFormatter = new DecimalFormat("#0.00");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 
 		Map<String, Object> sellerData = new HashMap<String, Object>();
 		User seller = item.getSeller();
@@ -143,9 +144,7 @@ public class RestItemController {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(item.getStartBidding());
 		cal.add(Calendar.HOUR, item.getTimeLeft());
-
-		dateData.put("display", (new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss")
-				.format(cal.getTime())));
+		dateData.put("display", dateFormat.format(cal.getTime()));
 		dateData.put("timestamp", cal.getTime());
 
 		data.put("uid", item.getId());
@@ -169,11 +168,6 @@ public class RestItemController {
 		return data;
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Item getItem(@PathVariable Long id) {
-        return itemDao.get(id);
-    }
-	
 	private Map<String, String> buildConstraintViolationsMap(ConstraintViolationException e) {
 		Map<String, String> constraintViolations = new HashMap<String,String>();
 		for (ConstraintViolation<?> entity: e.getConstraintViolations()) {
@@ -182,7 +176,7 @@ public class RestItemController {
 		return constraintViolations;
 	}
 	
-	@RequestMapping(value = "/save", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> createItem(@RequestBody Item item, Authentication auth, HttpServletResponse res) throws IOException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if ((auth != null) && (auth.isAuthenticated())) {
@@ -204,15 +198,15 @@ public class RestItemController {
 		return result;		
 	}
 	
-	@RequestMapping(value = "/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> updateItem(@RequestBody Item item, Authentication auth, HttpServletResponse res) throws IOException {
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> updateItem(@RequestBody Item item, @PathVariable Long id, Authentication auth, HttpServletResponse res) throws IOException {
 		Map<String, Object> result = new HashMap<String, Object>();
 		if ((auth != null) && (auth.isAuthenticated())) {
 			User user = (User) auth.getPrincipal();
-			if (item.getId() != null) {
-				Item persistItem = itemDao.get(item.getId());
+			if (id != null) {
+				Item persistItem = itemDao.get(id);
 				if (persistItem != null) {
-					if (persistItem.getSeller().equals(user)) {
+					if (user.equals(persistItem.getSeller())) {
 						persistItem.setTitle(item.getTitle());
 						persistItem.setDescription(item.getDescription());
 						persistItem.setStartPrice(item.getStartPrice());
@@ -239,4 +233,90 @@ public class RestItemController {
         result.put("status","SUCCESS");
 		return result;
     }
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public void deleteItem(@PathVariable Long id, Authentication auth, HttpServletResponse res) throws IOException {
+		if ((auth != null) && auth.isAuthenticated()) {
+			User user = (User) auth.getPrincipal();
+			if (user != null) {
+				Item persistItem = itemDao.get(id);
+				if (persistItem != null) {
+					if (user.equals(persistItem.getSeller())) {
+						itemDao.delete(persistItem);
+						return;
+					} else {
+						res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied.");
+						return;
+					}
+				}
+			}
+		} else {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied.");
+			return;
+		}
+	}
+	
+	@RequestMapping(value = "/{id}/bid/", method = RequestMethod.GET)
+	public Map<String, List<Map<String, Object>>> getBids(@PathVariable Long id, Authentication auth, HttpServletResponse res) throws IOException {
+		List<Map<String, Object>> data = new ArrayList<Map<String,Object>>();
+		NumberFormat numberFormatter = new DecimalFormat("#0.00");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		Item persistItem = itemDao.get(id);
+		if (persistItem != null) {
+			List<Bid> bids = itemDao.getAllBidsByItem(persistItem);
+			if ((bids != null) && (bids.size() > 0)) {
+				int count = 0;
+				for (Bid bid: bids) {
+					Map<String, Object> dataItem = new HashMap<String, Object>();
+					dataItem.put("count", ++count);
+					
+					Map<String, Object> bidderData = new HashMap<String, Object>();
+					User bidder = bid.getBidder();				
+					if (bidder != null) {
+						bidderData.put("id", bidder.getId());
+						bidderData.put("name", bidder.getFullName());
+					}
+					dataItem.put("bidder", bidderData);
+					dataItem.put("amount", numberFormatter.format(bid.getAmount()));
+					
+					Map<String, Object> dateData = new HashMap<String, Object>();
+					dateData.put("display", dateFormat.format(bid.getTimestamp()));
+					dateData.put("timestamp", Long.toString(bid.getTimestamp().getTime()));				
+					dataItem.put("ts", dateData);
+					
+					data.add(dataItem);
+				}
+			}
+		}
+		Map<String, List<Map<String, Object>>> results = new HashMap<String, List<Map<String, Object>>>();
+		results.put("data", data);
+		return results;
+	}
+	
+	@RequestMapping(value = "/{id}/bid/", method = RequestMethod.POST)
+	public Map<String, Object> createBids(@PathVariable Long id, @RequestParam double amount,
+			Authentication auth,
+			HttpServletRequest req,
+			HttpServletResponse res) throws IOException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		if ((auth != null) && auth.isAuthenticated()) {
+			Item item = itemDao.get(id);
+			if (item != null) {
+				Bid bid = new Bid();
+				bid.setBidder((User) auth.getPrincipal());
+				bid.setItem(item);
+				bid.setAmount(amount);
+				bid.setTimestamp(new Timestamp(new Date().getTime()));
+				
+				Long bidId = bidDao.create(bid);
+				res.setStatus(HttpServletResponse.SC_CREATED);
+				res.addHeader("Location", String.format("%s/rest/item/%s/bid/%s", req.getContextPath(), id, bidId));				
+				result = buildItemData(itemDao.get(id));
+			}
+		} else {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied.");
+			return null;
+		}
+		return result;
+	}
 }
