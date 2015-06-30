@@ -2,6 +2,7 @@ package com.ndobriukha.onlinemarketplace.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,4 +15,7 @@ public interface ItemDao<T, PK extends Serializable> extends GenericDao<T, PK> {
 	
 	@Transactional
 	List<Bid> getAllBidsByItem(T item);
+	
+	@Transactional
+	String getByParameters(Map<String, String[]> map);
 }

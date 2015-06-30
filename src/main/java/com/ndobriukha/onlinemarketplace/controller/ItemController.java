@@ -27,19 +27,19 @@ public class ItemController {
 	@Autowired
 	private ItemDao<Item, Long> itemDao;
 
-	@RequestMapping(value = "/show/all/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(value = "/show/all", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	public String showAll(Locale locale, Model model) throws Exception {
 		model.addAttribute("type", "All");
 		return "show";
 	}
 	
-	@RequestMapping(value = "/show/my/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(value = "/show/my", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	public String showMy(Locale locale, Model model) throws Exception {
 		model.addAttribute("type", "My");
 		return "show";
 	}
 	
-	@RequestMapping(value = "/new/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(value = "/new", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	public ModelAndView showNew() throws Exception {
 		ModelAndView modelAndView = new ModelAndView("edit");
 		modelAndView.addObject("actionUrl", "");
@@ -70,7 +70,7 @@ public class ItemController {
 		}
 	}
 	
-	@RequestMapping(value = "/search/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+	@RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
 	public ModelAndView showSearch() {
 		return new ModelAndView("search");
 	}

@@ -85,22 +85,5 @@
 				<button type="reset" class="btn btn-info btn-sm" id="btnReset">Clear</button>
 			</div>
 		</div>
-		<!-- <div class="row">
-			<div class="form-group">
-				<label for="minPrice" class="col-sm-3 control-label">Min Price</label>
-					<div class="col-sm-2">
-						<input type="text" id="minPrice" name="minPrice" class="form-control"
-						placeholder="min price"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="maxPrice" class="col-sm-3 control-label">Max Price</label>
-					<div class="col-sm-2">
-						<input type="text" id="maxPrice" name="maxPrice" class="form-control"
-						placeholder="max price"/>
-				</div>
-			</div>
-		</div> -->
-		
 	</form>
 </fieldset>

@@ -27,7 +27,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/css/**").permitAll()
 				.antMatchers("/logout").permitAll()
 				.antMatchers(HttpMethod.POST, "/rest/user/").anonymous()
-				.antMatchers(HttpMethod.GET, "/items/show/all", "/items/search/", "/rest/item/", "/rest/item/**/bid").hasAnyRole("USER", "ANONYMOUS")				
+				.antMatchers(HttpMethod.GET, "/items/show/all", "/items/search", "/rest/item/", "/rest/item/**/bid/").hasAnyRole("USER", "ANONYMOUS")				
 				.antMatchers("/items/**", "/rest/**").hasRole("USER").and()
 			.formLogin()
 				.loginPage("/login").usernameParameter("login").permitAll()

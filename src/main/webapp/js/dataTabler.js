@@ -33,7 +33,7 @@ require(
 					'dom': 'lt<"row"<"col-sm-5"i><"col-sm-7 input-group-sm"p>>',
 					'searching' : true,
 					'ajax' : {
-						'url': '../../rest/item/?scope=' + $('#type').val().toLowerCase(),
+						'url': '../../rest/item/?scope=' + $('#type').val().toLowerCase() + '&' + document.location.search.split('?')[1],
 						'type': 'GET'
 					},
 					'columnDefs': [

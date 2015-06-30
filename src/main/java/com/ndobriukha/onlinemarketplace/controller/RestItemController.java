@@ -44,7 +44,8 @@ public class RestItemController {
 	private BidDao<Bid, Long> bidDao;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-    public Map<String, List<Map<String, Object>>> getItems(@RequestParam String scope, Authentication auth) {
+    public Map<String, List<Map<String, Object>>> getItems(Authentication auth, @RequestParam String scope, @RequestParam(defaultValue = "false") boolean search, HttpServletRequest req ) {
+		System.out.println(String.format("sql = %s", itemDao.getByParameters(req.getParameterMap())));
 		User user = null;
 		if ((auth != null) && (auth.isAuthenticated())) {
 			user = (User) auth.getPrincipal();
