@@ -8,30 +8,15 @@ require.config({
     },
     shim: {
     	'bootstrapValidator.min': ['jquery'],
-    	'bootstrap': ['jquery']
+    	'bootstrap': ['jquery'],
+    	'common': ['jquery']
     }
 });
 
 require(
-	['jquery', 'bootstrap', 'bootstrapValidator.min'],
+	['jquery', 'bootstrap', 'bootstrapValidator.min', 'common'],
 	function( $, bootstrap, bootstrapValidator ){
-		$.fn.serializeObject = function()
-		{
-		    var o = {};
-		    var a = this.serializeArray();
-		    $.each(a, function() {
-		        if (o[this.name] !== undefined) {
-		            if (!o[this.name].push) {
-		                o[this.name] = [o[this.name]];
-		            }
-		            o[this.name].push(this.value || '');
-		        } else {
-		            o[this.name] = this.value || '';
-		        }
-		    });
-		    return o;
-		};
-		
+				
 		$(document).ready(function() {
     		$('#formLogin').bootstrapValidator({
     			fields: {
@@ -321,7 +306,7 @@ require(
     	        $('#bidIncrement')
     	        	.prop('disabled',false)
 					.parents('.form-group').show();
-    	    });
+    	    });			
     	})
     }
 );

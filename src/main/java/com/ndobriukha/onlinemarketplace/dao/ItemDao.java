@@ -17,5 +17,5 @@ public interface ItemDao<T, PK extends Serializable> extends GenericDao<T, PK> {
 	List<Bid> getAllBidsByItem(T item);
 	
 	@Transactional
-	String getByParameters(Map<String, String[]> map);
+	List<T> getByParameters(Map<String, String[]> map);
 }

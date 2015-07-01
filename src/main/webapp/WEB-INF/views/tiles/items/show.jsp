@@ -1,7 +1,7 @@
 	<input type='hidden' id='type' value='${ type }'/>
 	<div class="container-fluid">
 		<fieldset>
-			<legend class="h4">${ type } Items</legend>
+			<legend class="h4">${ type } Items&nbsp;<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#searchItemsModal">Search <span class="glyphicon glyphicon-filter" aria-hidden="true"></span></button></legend>
 			<table id="dataTable" class="table table-striped table-bordered" width="100%">
 				<col class="colWidth5">
 				<col class="colWidth10">
@@ -87,10 +87,9 @@
 					<form id="formSearchItems" action=""
 							class="form-horizontal"
 							data-bv-message="This value is not valid"
-							data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
 							data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
 							data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
-						<input type="hidden" name="search" value="true"/>
+						<!-- <input type="hidden" name="search" value="true"/> -->
 						<div class="form-group">
 							<label for="uid" class="col-sm-3 control-label">Item UID</label>
 								<div class="col-sm-6">
@@ -130,7 +129,7 @@
 							<div class="col-sm-6">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox" id="isBuyItNow" name="isBuyItNow" aria-label="..."/>&nbsp;Show Only					
+										<input type="checkbox" id="isBuyItNow" name="isBuyItNow" value="true" aria-label="..."/>&nbsp;Show Only					
 									</label>
 								</div>
 							</div>			
@@ -138,16 +137,14 @@
 						<hr/>
 						<div class="form-group">
 							<label for="startDate" class="col-sm-3 control-label">Start date</label>
-							<div class="row col-sm-6">
-								<div class="col-sm-4">
-									<input type="text" id="startDate" name="startDate" class="form-control" placeholder="Start"/>
-								</div>
-								<div>
-									<label for="expireDate" class="col-sm-4 control-label">Expire date</label>
-									<div class="col-sm-4">
-										<input type="text" id="expireDate" name="expireDate" class="form-control" placeholder="Expire"/>
-									</div>
-								</div>
+							<div class="col-sm-4">
+								<input type="text" id="startDate" name="startDate" class="form-control" placeholder="DD/MM/YYYY HH:MI"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="expireDate" class="col-sm-3 control-label">Expire date</label>
+							<div class="col-sm-4">
+								<input type="text" id="expireDate" name="expireDate" class="form-control" placeholder="DD/MM/YYYY HH:MI"/>
 							</div>
 						</div>
 						<hr/>
@@ -158,7 +155,7 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-primary">Search</button>
+							<button type="submit" id="btnSearchSubmit" class="btn btn-primary">Search</button>
 							<button type="reset" class="btn btn-info" id="btnReset">Clear</button>
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>

@@ -11,12 +11,13 @@ require.config({
     shim: {
     	'datatables': ['jquery'],
     	'bootstrap': ['jquery'],
-    	'bootstrapValidator.min': ['jquery']
+    	'bootstrapValidator.min': ['jquery'],
+    	'common': ['jquery']
     }
 });
 
 require(
-		['jquery', 'datatables', 'integration', 'bootstrap', 'bootstrapValidator.min'],
+		['jquery', 'datatables', 'integration', 'bootstrap', 'bootstrapValidator.min', 'common'],
 		function( $, datatables, integration ) {
 		    $(document).ready(function() {
 		    	$('#dataTable tfoot th').each(
@@ -208,6 +209,99 @@ require(
 					}
 				})
 				
+				$('#formSearchItems').bootstrapValidator({
+					fields : {
+						uid: {
+							validators: {
+								digits: {}
+							}
+						},
+						title: {
+							validators: {
+								stringLength: {
+									min: 3
+								}
+							}
+						},
+						description: {
+							validators: {
+								stringLength: {
+									min: 3
+								}
+							}
+						},
+						minPrice: {
+							validators: {
+								numeric: {}
+							}
+						},
+						maxPrice: {
+							validators: {
+								numeric: {}
+							}
+						},
+						startDate: {
+							validators: {
+								date: {
+									format: 'DD/MM/YYYY H:M'
+								}
+							}
+						},
+						expireDate: {
+							validators: {
+								date: {
+									format: 'DD/MM/YYYY H:M'
+								}
+							}
+						},
+						bidderCount: {
+							validators: {
+								digits: {}
+							}
+						}
+					}
+				})
+				.on('success.field.bv', function(e, data) {
+					if (data.bv.$invalidFields.length === 0) {
+						var fields = $(this).serializeObject(),
+							isSubmitDisabled = true;
+						for (field in fields) {
+							if (fields[field] !== "") {
+								isSubmitDisabled = false;
+								break;
+							}
+						}
+						data.bv.disableSubmitButtons(isSubmitDisabled);
+					}
+				})
+				.on('status.field.bv', function(e, data) {
+					if (data.element.val() === "") data.element.parents('.form-group').removeClass('has-success');
+		        })
+				.on('success.form.bv', function(e) {
+					e.preventDefault();
+					$('#searchItemsModal').modal('hide');
+					var table = $('#dataTable').DataTable();
+				    table.ajax.url( '../../rest/item/?scope=' + $('#type').val().toLowerCase() + '&search=true&' + $(this).serialize() ).load();
+				})
+				$('#isBuyItNow').on('click', function() {
+					var $this = $(this),
+						$form = $this.closest('form'),
+						fields = $form.serializeObject(),
+						isSubmitDisabled = true;
+					if (!$this.prop('checked')) {
+						if ($form.data('bootstrapValidator').$invalidFields.length === 0) {
+							for (field in fields) {
+								if (fields[field] !== "") {
+									isSubmitDisabled = false;
+									break;
+								}
+							}
+						}
+					} else {
+						isSubmitDisabled = false;
+					}
+					$('#btnSearchSubmit').prop('disabled', isSubmitDisabled);
+				})
 			})
 		}
 );

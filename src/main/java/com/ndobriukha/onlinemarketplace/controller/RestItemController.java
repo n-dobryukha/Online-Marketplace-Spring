@@ -45,13 +45,17 @@ public class RestItemController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public Map<String, List<Map<String, Object>>> getItems(Authentication auth, @RequestParam String scope, @RequestParam(defaultValue = "false") boolean search, HttpServletRequest req ) {
-		System.out.println(String.format("sql = %s", itemDao.getByParameters(req.getParameterMap())));
 		User user = null;
 		if ((auth != null) && (auth.isAuthenticated())) {
 			user = (User) auth.getPrincipal();
 		}
 		final List<Map<String, Object>> data = new ArrayList<Map<String,Object>>();
-		List<Item> items = itemDao.get();
+		List<Item> items = null;
+		if (search) {
+			items = itemDao.getByParameters(req.getParameterMap());			
+		} else {
+			items = itemDao.get();
+		}
 		for (Item item: items) {
 			Map<String, Object> dataItem = buildItemData(item);
 			switch (scope) {
