@@ -1,5 +1,7 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +11,8 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.Type;
 import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.Type;
 
 import com.ndobriukha.onlinemarketplace.domain.Bid;
 import com.ndobriukha.onlinemarketplace.domain.Item;
@@ -46,28 +48,28 @@ public class ItemDaoImpl extends GenericDaoHibernateImpl<Item, Long> implements 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Item> getByParameters(Map<String, String[]> params) throws NumberFormatException {
+	public List<Item> getByParameters(Map<String, String[]> params) throws NumberFormatException, ParseException {
 		boolean isFirst = true;
 		List<Object> valuesArrayList = new ArrayList<Object>();
 		List<Type> typesArrayList = new ArrayList<Type>();
 		StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ITEMS WHERE ID IN (SELECT ID FROM (\r\n" + 
 				"    SELECT ID, TITLE, DESCRIPTION, NVL(B.BID, I.START_PRICE) AS \"PRICE\",\r\n" + 
-				"            TO_CHAR(I.START_BIDDING, 'yyyy-mm-dd hh24:mi') AS \"START\",\r\n" + 
-				"            TO_CHAR((I.START_BIDDING + NUMTODSINTERVAL(I.TIME_LEFT, 'HOUR')), 'yyyy-mm-dd hh24:mi') AS \"EXPIRE\",\r\n" + 
+				"            I.START_BIDDING AS \"START_DATE\",\r\n" + 
+				"            (I.START_BIDDING + NUMTODSINTERVAL(I.TIME_LEFT, 'HOUR')) AS \"EXPIRE_DATE\",\r\n" + 
 				"            I.BUY_IT_NOW,\r\n" + 
-				"            NVL(B.\"COUNT\", 0) \"COUNT\"\r\n" + 
+				"            NVL(B.\"BIDDER_COUNT\", 0) \"BIDDER_COUNT\"\r\n" + 
 				"        FROM ITEMS I\r\n" + 
-				"        LEFT JOIN (SELECT ITEM_ID, MAX(AMOUNT) BID, COUNT(DISTINCT BIDDER_ID) \"COUNT\"\r\n" + 
+				"        LEFT JOIN (SELECT ITEM_ID, MAX(AMOUNT) BID, COUNT(DISTINCT BIDDER_ID) \"BIDDER_COUNT\"\r\n" + 
 				"                FROM BIDS\r\n" + 
 				"                GROUP BY ITEM_ID) B ON I.ID = B.ITEM_ID)\r\n" + 
 				"    WHERE");
 		for(Entry<String, String[]> param: params.entrySet()) {
 			String key = param.getKey();
 			String[] value = param.getValue();
-			System.out.println(String.format("%s = %s", key, value[0]));
 			if ((value.length == 0) || (value[0].equals(""))) {
 				continue;
 			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			switch (key) {
 			case "uid":
 				sqlBuilder.append( String.format("%s ID = ?", !isFirst ? " AND" : ""));
@@ -95,19 +97,36 @@ public class ItemDaoImpl extends GenericDaoHibernateImpl<Item, Long> implements 
 				isFirst = false;
 				break;
 			case "bidderCount":
-				sqlBuilder.append( String.format("%s COUNT = ?", !isFirst ? " AND" : ""));
+				sqlBuilder.append( String.format("%s BIDDER_COUNT = ?", !isFirst ? " AND" : ""));
 				valuesArrayList.add(Integer.parseInt(value[0]));
 				typesArrayList.add(StandardBasicTypes.INTEGER);
+				isFirst = false;
+				break;
+			case "isBuyItNow":
+				sqlBuilder.append( String.format("%s BUY_IT_NOW = ?", !isFirst ? " AND" : ""));
+				valuesArrayList.add(Boolean.valueOf(value[0].toUpperCase()));
+				typesArrayList.add(StandardBasicTypes.YES_NO);
+				isFirst = false;
+				break;
+			case "startDate":
+				sqlBuilder.append( String.format("%s START_DATE >= ?", !isFirst ? " AND" : ""));
+				valuesArrayList.add(dateFormat.parse(value[0]));
+				typesArrayList.add(StandardBasicTypes.TIMESTAMP);
+				isFirst = false;
+				break;
+			case "expireDate":
+				sqlBuilder.append( String.format("%s EXPIRE_DATE <= ?", !isFirst ? " AND" : ""));
+				valuesArrayList.add(dateFormat.parse(value[0]));
+				typesArrayList.add(StandardBasicTypes.TIMESTAMP);
+				isFirst = false;
 				break;
 			default:
 				break;
 			}			
 		}
 		sqlBuilder.append(")");
-		System.out.println(String.format("sql = %s", sqlBuilder.toString()));
 		Object[] valuesArray = valuesArrayList.toArray(new Object[valuesArrayList.size()]);
 		Type[] typesArray = typesArrayList.toArray(new Type[typesArrayList.size()]);;
-		System.out.println(String.format("values = %s; types = %s", valuesArray.length, typesArray.length));
 		Query query = getSession().createSQLQuery(sqlBuilder.toString())
 				.addEntity(Item.class)
 				.setParameters(valuesArray, typesArray);

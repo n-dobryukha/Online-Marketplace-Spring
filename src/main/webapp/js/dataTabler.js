@@ -185,7 +185,7 @@ require(
 					})
 				});
 				
-				$('#bidListModal').on('show.bs.modal', function (event) {					
+				$('#bidListModal').on('show.bs.modal', function (event) {
 					var itemId = $(event.relatedTarget).data('whatever');
 					var table;
 					if ( $.fn.dataTable.isDataTable( '#biddingTable' ) ) {
@@ -208,6 +208,31 @@ require(
 						});
 					}
 				})
+				
+				$('#searchItemsModal').on('show.bs.modal', function (event) {
+					var $form = $('#formSearchItems'),
+						bv = $form.data('bootstrapValidator'),
+						fields = $form.serializeObject(),
+						isLocalStorage = isLocalStorageAvailable(),
+						isSubmitDisabled = true;
+					
+					for (field in fields) {
+						var $field = $('#'+field);
+						if (isLocalStorage) {
+							$field.val(localStorage.getItem('onlinemarketplace.itemsearch.'+field));
+						}
+						if ($field.val() !== "") {
+							isSubmitDisabled = false;
+						}
+					}
+					if (isLocalStorage) {
+						$('#isBuyItNow').prop('checked', (localStorage.getItem('onlinemarketplace.itemsearch.isBuyItNow') === 'true'));
+					}
+					if ($('#isBuyItNow').prop('checked')) {
+						isSubmitDisabled = false;
+					}					
+					$('#btnSearchSubmit').prop('disabled', isSubmitDisabled);
+				});
 				
 				$('#formSearchItems').bootstrapValidator({
 					fields : {
@@ -243,14 +268,14 @@ require(
 						startDate: {
 							validators: {
 								date: {
-									format: 'DD/MM/YYYY H:M'
+									format: 'YYYY-MM-DD H:M'
 								}
 							}
 						},
 						expireDate: {
 							validators: {
 								date: {
-									format: 'DD/MM/YYYY H:M'
+									format: 'YYYY-MM-DD H:M'
 								}
 							}
 						},
@@ -279,10 +304,19 @@ require(
 		        })
 				.on('success.form.bv', function(e) {
 					e.preventDefault();
+					var $form = $(this),
+						fields = $form.serializeObject();
+					if (isLocalStorageAvailable()) {
+						for (field in fields) {
+							localStorage.setItem('onlinemarketplace.itemsearch.'+field, fields[field]);
+						}
+						localStorage.setItem('onlinemarketplace.itemsearch.isBuyItNow', $('#isBuyItNow').prop('checked'));
+					}
 					$('#searchItemsModal').modal('hide');
 					var table = $('#dataTable').DataTable();
-				    table.ajax.url( '../../rest/item/?scope=' + $('#type').val().toLowerCase() + '&search=true&' + $(this).serialize() ).load();
+				    table.ajax.url( '../../rest/item/?scope=' + $('#type').val().toLowerCase() + '&search=true&' + $form.serialize() ).load();
 				})
+				
 				$('#isBuyItNow').on('click', function() {
 					var $this = $(this),
 						$form = $this.closest('form'),
@@ -301,6 +335,21 @@ require(
 						isSubmitDisabled = false;
 					}
 					$('#btnSearchSubmit').prop('disabled', isSubmitDisabled);
+				});
+				
+				$('#btnReset').click(function() {
+					var $form = $(this).closest('form'),
+						fields = $form.serializeObject(),
+						table = $('#dataTable').DataTable();
+					if (isLocalStorageAvailable()) {
+						for (field in fields) {
+							localStorage.removeItem('onlinemarketplace.itemsearch.'+field);
+						}
+						localStorage.removeItem('onlinemarketplace.itemsearch.isBuyItNow');
+					}
+					$form.data('bootstrapValidator').resetForm(true);
+					$('#searchItemsModal').modal('hide');
+					table.ajax.url( '../../rest/item/?scope=' + $('#type').val().toLowerCase() + '&search=false' ).load();
 				})
 			})
 		}

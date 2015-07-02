@@ -13,3 +13,11 @@ $.fn.serializeObject = function() {
 	});
 	return o;
 };
+
+function isLocalStorageAvailable() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
+    }
+};

@@ -109,21 +109,21 @@
 							</div>
 						</div>
 						<hr/>
-						<div class="form-group">
-							<label for="minPrice" class="col-sm-3 control-label">Min Price</label>
-							<div class="row col-sm-6">
+						<div class="form-inline col-sm-12">
+							<div class="form-group col-sm-6">
+								<label for="minPrice" class="col-sm-6 control-label">Min Price</label>
 								<div class="col-sm-4">
 									<input type="text" id="minPrice" name="minPrice" class="form-control" placeholder="Min"/>
 								</div>
-								<div>
-									<label for="maxPrice" class="col-sm-4 control-label">Max Price</label>
-									<div class="col-sm-4">
-										<input type="text" id="maxPrice" name="maxPrice" class="form-control" placeholder="Max"/>
-									</div>
+							</div>
+							<div class="form-group col-sm-6">
+								<label for="maxPrice" class="col-sm-3 control-label">Max Price</label>
+								<div class="col-sm-4">
+									<input type="text" id="maxPrice" name="maxPrice" class="form-control" placeholder="Max"/>
 								</div>
 							</div>
 						</div>
-						<hr/>
+						<br/><br/><hr/>
 						<div class="form-group">
 							<label for="isBuyItNow" class="col-sm-3 control-label">Buy It Now</label>
 							<div class="col-sm-6">
@@ -138,13 +138,13 @@
 						<div class="form-group">
 							<label for="startDate" class="col-sm-3 control-label">Start date</label>
 							<div class="col-sm-4">
-								<input type="text" id="startDate" name="startDate" class="form-control" placeholder="DD/MM/YYYY HH:MI"/>
+								<input type="text" id="startDate" name="startDate" class="form-control" placeholder="YYYY-MM-DD HH:MI"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="expireDate" class="col-sm-3 control-label">Expire date</label>
 							<div class="col-sm-4">
-								<input type="text" id="expireDate" name="expireDate" class="form-control" placeholder="DD/MM/YYYY HH:MI"/>
+								<input type="text" id="expireDate" name="expireDate" class="form-control" placeholder="YYYY-MM-DD HH:MI"/>
 							</div>
 						</div>
 						<hr/>

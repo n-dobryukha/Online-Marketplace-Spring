@@ -37,6 +37,9 @@ table#dataTable
     line-height: 26px;
   }
 }
+.form-control {
+	width: 100% !important;
+}
 .form-control-static.input-xs {
   padding-right: 0;
   padding-left: 0;

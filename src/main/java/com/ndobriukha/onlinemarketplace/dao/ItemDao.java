@@ -1,6 +1,7 @@
 package com.ndobriukha.onlinemarketplace.dao;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,5 +18,5 @@ public interface ItemDao<T, PK extends Serializable> extends GenericDao<T, PK> {
 	List<Bid> getAllBidsByItem(T item);
 	
 	@Transactional
-	List<T> getByParameters(Map<String, String[]> map);
+	List<T> getByParameters(Map<String, String[]> map) throws NumberFormatException, ParseException;
 }

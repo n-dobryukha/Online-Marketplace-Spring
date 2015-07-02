@@ -18,8 +18,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
 @Table(name="ITEMS")
 public class Item {
@@ -119,7 +117,6 @@ public class Item {
 		this.timeLeft = timeLeft;
 	}
 
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
 	public Date getStartBidding() {
 		return startBidding;
 	}

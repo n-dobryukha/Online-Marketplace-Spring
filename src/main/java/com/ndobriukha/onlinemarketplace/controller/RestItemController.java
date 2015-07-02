@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +45,7 @@ public class RestItemController {
 	private BidDao<Bid, Long> bidDao;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-    public Map<String, List<Map<String, Object>>> getItems(Authentication auth, @RequestParam String scope, @RequestParam(defaultValue = "false") boolean search, HttpServletRequest req ) {
+    public Map<String, List<Map<String, Object>>> getItems(Authentication auth, @RequestParam String scope, @RequestParam(defaultValue = "false") boolean search, HttpServletRequest req ) throws NumberFormatException, ParseException {
 		User user = null;
 		if ((auth != null) && (auth.isAuthenticated())) {
 			user = (User) auth.getPrincipal();
